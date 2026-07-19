@@ -1,0 +1,29 @@
+name: Bug report
+description: Something crashed or behaved wrong (not a false positive)
+title: "<short description>"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, what you got. Include the command and any error output.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. In a repo with …
+        2. Run `npx ctxvet …`
+        3. …
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "ctxvet version, Node version, OS"
+    validations:
+      required: true

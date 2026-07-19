@@ -89,6 +89,6 @@ Fair question. AGENTS.md is a real standard (Linux Foundation AAIF, 20+ tools re
 
 ## Contributing
 
-A rule is one pure function: `check(file, ctx) => Finding[]`. Add a file in [src/rules](src/rules), register it, add a fixture. If a rule needs a heuristic, it needs an adversarial test — we prefer a missed finding over a false positive.
+A rule is one pure function: `check(file, ctx) => Finding[]`. Add a file in [src/rules](src/rules), register it, add a fixture. If a rule needs a heuristic, it needs an adversarial test — we prefer a missed finding over a false positive. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide, and please file [false-positive reports](https://github.com/JacobColburn/ctxvet/issues/new?labels=false-positive) — they're the most useful feedback for a linter.
 
 MIT © Hunter Colburn

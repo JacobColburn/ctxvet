@@ -1,0 +1,38 @@
+name: False positive
+description: ctxvet flagged something it shouldn't have
+title: "[FP] <rule-id>: <short description>"
+labels: ["false-positive"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        False-positive reports are the most valuable feedback we get — thank you. The smaller the repro, the faster the fix.
+  - type: input
+    id: rule
+    attributes:
+      label: Which rule?
+      placeholder: "e.g. repo/dead-path"
+    validations:
+      required: true
+  - type: textarea
+    id: snippet
+    attributes:
+      label: Minimal context-file snippet that triggers it
+      description: The smallest CLAUDE.md / AGENTS.md / SKILL.md content that reproduces the false flag.
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Why it shouldn't have flagged
+      placeholder: "e.g. the path exists but is gitignored / it's an illustrative example / the script is workspace-scoped"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: ctxvet version
+      placeholder: "npx ctxvet --version"
+    validations:
+      required: false

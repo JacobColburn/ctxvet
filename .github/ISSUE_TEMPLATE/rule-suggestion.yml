@@ -1,0 +1,29 @@
+name: Rule suggestion
+description: Propose a new context-file check
+title: "[rule] <what it would catch>"
+labels: ["rule-suggestion"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What should it catch?
+      description: Describe the context-file problem and a concrete example of the bad pattern.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter? (evidence)
+      description: ctxvet rules cite a source — research, a vendor spec, or measurable cost. What's the basis here?
+    validations:
+      required: true
+  - type: dropdown
+    id: deterministic
+    attributes:
+      label: Can it be checked deterministically (no LLM, no network)?
+      options:
+        - "Yes"
+        - "Not sure"
+        - "No — needs an LLM"
+    validations:
+      required: true
