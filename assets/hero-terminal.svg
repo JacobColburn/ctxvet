@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 940" font-family="ui-monospace,'SF Mono',Menlo,Consolas,monospace">
+  <rect width="1600" height="940" fill="#010409"/>
+  <!-- window -->
+  <rect x="60" y="60" width="1480" height="820" rx="18" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <!-- title bar -->
+  <rect x="60" y="60" width="1480" height="64" rx="18" fill="#161b22"/>
+  <rect x="60" y="104" width="1480" height="20" fill="#161b22"/>
+  <circle cx="102" cy="92" r="10" fill="#ff5f57"/>
+  <circle cx="140" cy="92" r="10" fill="#febc2e"/>
+  <circle cx="178" cy="92" r="10" fill="#28c840"/>
+  <text x="800" y="99" fill="#6e7681" font-size="22" text-anchor="middle">ctxvet — CLAUDE.md · AGENTS.md · .cursor/rules · SKILL.md</text>
+
+  <g font-size="27">
+    <text x="96" y="192" fill="#3fb950">$ npx ctxvet</text>
+
+    <text x="96" y="262" fill="#e6edf3" font-weight="bold" text-decoration="underline">CLAUDE.md</text>
+
+    <text x="112" y="312" fill="#6e7681">CLAUDE.md:3</text>
+    <text x="300" y="312" fill="#d29922">warn</text>
+    <text x="392" y="312" fill="#6e7681">repo/dead-path</text>
+    <text x="640" y="312" fill="#e6edf3">'src/server.ts' does not exist in this repo</text>
+
+    <text x="112" y="356" fill="#6e7681">CLAUDE.md:3</text>
+    <text x="300" y="356" fill="#d29922">warn</text>
+    <text x="392" y="356" fill="#6e7681">repo/dead-path</text>
+    <text x="640" y="356" fill="#e6edf3">'src/config/legacy.ts' does not exist in this repo</text>
+
+    <text x="112" y="400" fill="#6e7681">CLAUDE.md:5</text>
+    <text x="300" y="400" fill="#d29922">warn</text>
+    <text x="392" y="400" fill="#6e7681">repo/dead-script</text>
+    <text x="660" y="400" fill="#e6edf3">'npm run typecheck' — no such script in any package.json</text>
+
+    <text x="112" y="444" fill="#6e7681">CLAUDE.md:5</text>
+    <text x="300" y="444" fill="#56d4dd">info</text>
+    <text x="392" y="444" fill="#6e7681">style/vague-instruction</text>
+    <text x="770" y="444" fill="#e6edf3">no-op line ('follow best practices')</text>
+
+    <text x="112" y="488" fill="#6e7681">CLAUDE.md:8</text>
+    <text x="300" y="488" fill="#d29922">warn</text>
+    <text x="392" y="488" fill="#6e7681">dup/cross-file</text>
+    <text x="640" y="488" fill="#e6edf3">duplicates AGENTS.md:3 — you pay for this twice</text>
+
+    <text x="96" y="576" fill="#e6edf3" xml:space="preserve">2 files scanned  <tspan fill="#6e7681">·</tspan>  <tspan fill="#3fb950">0 errors</tspan>  <tspan fill="#6e7681">·</tspan>  <tspan fill="#d29922">4 warnings</tspan>  <tspan fill="#6e7681">·</tspan>  <tspan fill="#56d4dd">1 info</tspan></text>
+    <text x="96" y="616" fill="#8b949e">est. 132 tokens of context (~36 in duplicates)</text>
+
+    <text x="96" y="712" fill="#6e7681">Code has linters. The files steering your agents didn't — until now.</text>
+    <text x="96" y="800" fill="#3fb950" font-size="30">npx ctxvet</text>
+    <text x="360" y="800" fill="#484f58" font-size="30">·  deterministic  ·  no LLM calls  ·  MIT</text>
+  </g>
+</svg>

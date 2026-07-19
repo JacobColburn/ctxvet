@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" font-family="ui-monospace,'SF Mono',Menlo,Consolas,monospace">
+  <rect width="1024" height="1024" rx="180" fill="#0d1117"/>
+  <rect x="12" y="12" width="1000" height="1000" rx="170" fill="none" stroke="#21262d" stroke-width="8"/>
+  <!-- terminal prompt chevron -->
+  <path d="M 250 360 L 430 512 L 250 664" fill="none" stroke="#3fb950" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- check mark (the "vet" — it passed) -->
+  <path d="M 500 540 L 590 630 L 780 400" fill="none" stroke="#e6edf3" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- wordmark -->
+  <text x="512" y="850" fill="#8b949e" font-size="118" font-weight="bold" text-anchor="middle" letter-spacing="2">ctxvet</text>
+</svg>
