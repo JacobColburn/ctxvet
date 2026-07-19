@@ -9,6 +9,10 @@
     "type": "git",
     "url": "git+https://github.com/JacobColburn/ctxvet.git"
   },
+  "homepage": "https://github.com/JacobColburn/ctxvet#readme",
+  "bugs": {
+    "url": "https://github.com/JacobColburn/ctxvet/issues"
+  },
   "keywords": [
     "claude",
     "claude-code",
