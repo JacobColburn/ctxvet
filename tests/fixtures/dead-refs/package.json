@@ -1,0 +1,6 @@
+{
+  "name": "dead-refs-fixture",
+  "scripts": {
+    "build": "echo build"
+  }
+}

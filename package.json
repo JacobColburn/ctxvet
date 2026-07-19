@@ -1,0 +1,62 @@
+{
+  "name": "ctxvet",
+  "version": "0.1.0",
+  "description": "Evidence-grounded linter for AI agent context files — CLAUDE.md, AGENTS.md, .cursor/rules, SKILL.md — checked against your actual repo.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Hunter Colburn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JacobColburn/ctxvet.git"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "agents-md",
+    "cursor-rules",
+    "skill-md",
+    "lint",
+    "linter",
+    "ai-agents",
+    "context-engineering"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "ctxvet": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint:self": "node dist/cli.js .",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "commander": "15.0.0",
+    "fast-glob": "3.3.3",
+    "picocolors": "1.1.1",
+    "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}

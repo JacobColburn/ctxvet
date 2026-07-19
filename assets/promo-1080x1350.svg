@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">
+  <rect width="1080" height="1350" fill="#0d1117"/>
+  <text x="80" y="130" fill="#e6edf3" font-size="64" font-weight="bold">ctxvet</text>
+  <text x="80" y="185" fill="#7c8b9d" font-size="30">lint your agent context files</text>
+  <text x="80" y="225" fill="#7c8b9d" font-size="30">against your actual repo</text>
+
+  <!-- stat block -->
+  <rect x="80" y="280" width="920" height="210" rx="16" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+  <text x="112" y="345" fill="#e6edf3" font-size="27">We scanned <tspan fill="#79c0ff" font-weight="bold">10 popular OSS repos</tspan>:</text>
+  <text x="112" y="395" fill="#e6edf3" font-size="27"><tspan fill="#d29922" font-weight="bold">10/10</tspan> referenced files that don't exist —</text>
+  <text x="112" y="445" fill="#e6edf3" font-size="27"><tspan fill="#d29922" font-weight="bold">146 dead paths</tspan> across 80 context files.</text>
+
+  <!-- terminal window -->
+  <rect x="80" y="540" width="920" height="560" rx="16" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+  <circle cx="120" cy="576" r="9" fill="#ff5f57"/>
+  <circle cx="150" cy="576" r="9" fill="#febc2e"/>
+  <circle cx="180" cy="576" r="9" fill="#28c840"/>
+
+  <text x="112" y="640" fill="#3fb950" font-size="26">$ npx ctxvet</text>
+
+  <text x="112" y="700" fill="#e6edf3" font-size="25" font-weight="bold" text-decoration="underline">CLAUDE.md</text>
+  <text x="112" y="745" fill="#8b949e" font-size="23">CLAUDE.md:42</text>
+  <text x="310" y="745" fill="#d29922" font-size="23">warn</text>
+  <text x="400" y="745" fill="#8b949e" font-size="23">repo/dead-path</text>
+  <text x="112" y="780" fill="#e6edf3" font-size="23">  'src/utils/legacy.ts' does not exist in this repo</text>
+
+  <text x="112" y="830" fill="#8b949e" font-size="23">CLAUDE.md:17</text>
+  <text x="310" y="830" fill="#d29922" font-size="23">warn</text>
+  <text x="400" y="830" fill="#8b949e" font-size="23">repo/dead-script</text>
+  <text x="112" y="865" fill="#e6edf3" font-size="23">  'npm run typecheck' — no such script exists</text>
+
+  <text x="112" y="915" fill="#8b949e" font-size="23">SKILL.md:3</text>
+  <text x="310" y="915" fill="#d29922" font-size="23">warn</text>
+  <text x="400" y="915" fill="#8b949e" font-size="23">skill/description-quality</text>
+  <text x="112" y="950" fill="#e6edf3" font-size="23">  no "when to use" signal — this never triggers</text>
+
+  <text x="112" y="1010" fill="#e6edf3" font-size="23">4 files scanned · <tspan fill="#3fb950">0 errors</tspan> · <tspan fill="#d29922">3 warnings</tspan></text>
+  <text x="112" y="1050" fill="#8b949e" font-size="23">est. 5.3k tokens of context (~1.1k in duplicates)</text>
+
+  <text x="80" y="1180" fill="#e6edf3" font-size="30">Context rot is silent. Nothing fails</text>
+  <text x="80" y="1225" fill="#7c8b9d" font-size="30">when your CLAUDE.md becomes fiction.</text>
+  <text x="80" y="1300" fill="#3fb950" font-size="26">deterministic · no LLM calls · MIT · npx ctxvet</text>
+</svg>

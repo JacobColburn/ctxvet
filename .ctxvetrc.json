@@ -1,0 +1,7 @@
+{
+  // Fixture repos are intentionally unhealthy; internal/ is not part of the product.
+  "ignore": [
+    "tests/fixtures/**",
+    "internal/**"
+  ]
+}

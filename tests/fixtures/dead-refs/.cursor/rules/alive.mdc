@@ -1,0 +1,6 @@
+---
+description: TypeScript conventions
+globs: "**/*.ts"
+---
+
+Prefer explicit return types.

@@ -1,0 +1,145 @@
+{
+  "generatedWith": "ctxvet 0.1.0",
+  "repos": [
+    {
+      "repo": "All-Hands-AI_OpenHands",
+      "filesScanned": 4,
+      "estTokens": 11381,
+      "estDupTokens": 0,
+      "errors": 1,
+      "warnings": 51,
+      "infos": 1,
+      "byRule": {
+        "skill/description-quality": 3,
+        "skill/frontmatter": 1,
+        "repo/dead-path": 48,
+        "size/bloat": 1
+      }
+    },
+    {
+      "repo": "RooCodeInc_Roo-Code",
+      "filesScanned": 4,
+      "estTokens": 6218,
+      "estDupTokens": 0,
+      "errors": 0,
+      "warnings": 23,
+      "infos": 1,
+      "byRule": {
+        "repo/dead-path": 23,
+        "style/vague-instruction": 1
+      }
+    },
+    {
+      "repo": "anthropics_skills",
+      "filesScanned": 18,
+      "estTokens": 60451,
+      "estDupTokens": 321,
+      "errors": 0,
+      "warnings": 11,
+      "infos": 1,
+      "byRule": {
+        "size/bloat": 1,
+        "skill/frontmatter": 2,
+        "dup/cross-file": 3,
+        "style/vague-instruction": 1,
+        "repo/dead-path": 3,
+        "skill/description-quality": 2
+      }
+    },
+    {
+      "repo": "block_goose",
+      "filesScanned": 3,
+      "estTokens": 2420,
+      "estDupTokens": 0,
+      "errors": 0,
+      "warnings": 1,
+      "infos": 0,
+      "byRule": {
+        "repo/dead-path": 1
+      }
+    },
+    {
+      "repo": "browser-use_browser-use",
+      "filesScanned": 9,
+      "estTokens": 25766,
+      "estDupTokens": 2619,
+      "errors": 1,
+      "warnings": 19,
+      "infos": 1,
+      "byRule": {
+        "size/bloat": 1,
+        "dup/cross-file": 15,
+        "skill/description-quality": 2,
+        "repo/dead-path": 3
+      }
+    },
+    {
+      "repo": "cline_cline",
+      "filesScanned": 6,
+      "estTokens": 11248,
+      "estDupTokens": 32,
+      "errors": 0,
+      "warnings": 62,
+      "infos": 0,
+      "byRule": {
+        "repo/dead-path": 58,
+        "repo/dead-script": 3,
+        "dup/cross-file": 1
+      }
+    },
+    {
+      "repo": "continuedev_continue",
+      "filesScanned": 2,
+      "estTokens": 2282,
+      "estDupTokens": 0,
+      "errors": 0,
+      "warnings": 6,
+      "infos": 0,
+      "byRule": {
+        "repo/dead-path": 6
+      }
+    },
+    {
+      "repo": "ghostty-org_ghostty",
+      "filesScanned": 11,
+      "estTokens": 4328,
+      "estDupTokens": 0,
+      "errors": 0,
+      "warnings": 2,
+      "infos": 0,
+      "byRule": {
+        "repo/dead-path": 2
+      }
+    },
+    {
+      "repo": "openai_codex",
+      "filesScanned": 15,
+      "estTokens": 17534,
+      "estDupTokens": 845,
+      "errors": 0,
+      "warnings": 50,
+      "infos": 0,
+      "byRule": {
+        "skill/description-quality": 15,
+        "skill/frontmatter": 1,
+        "dup/cross-file": 10,
+        "repo/dead-path": 23,
+        "size/bloat": 1
+      }
+    },
+    {
+      "repo": "sst_opencode",
+      "filesScanned": 8,
+      "estTokens": 5585,
+      "estDupTokens": 0,
+      "errors": 0,
+      "warnings": 15,
+      "infos": 0,
+      "byRule": {
+        "skill/description-quality": 1,
+        "repo/dead-path": 13,
+        "repo/dead-script": 1
+      }
+    }
+  ]
+}
