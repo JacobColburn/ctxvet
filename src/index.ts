@@ -8,8 +8,10 @@ export { ConfigError, DEFAULT_CONFIG, loadConfig } from './config.js'
 export { ALL_RULES } from './rules/index.js'
 export type * from './types.js'
 
-const DISABLE_LINE_RE = /ctxvet-disable-next-line((?:\s+[\w/-]+)*)/
-const DISABLE_FILE_RE = /ctxvet-disable-file((?:\s+[\w/-]+)*)/
+// Rule ids always contain a slash (`group/name`) — requiring it keeps the
+// `-->` of a bare closing HTML comment from being read as an id.
+const DISABLE_LINE_RE = /ctxvet-disable-next-line((?:[ \t]+[\w-]+\/[\w-]+)*)/
+const DISABLE_FILE_RE = /ctxvet-disable-file((?:[ \t]+[\w-]+\/[\w-]+)*)/
 
 function idsFrom(match: string | undefined): Set<string> | 'all' {
   const ids = (match ?? '').trim().split(/\s+/).filter(Boolean)
@@ -24,6 +26,7 @@ export function applySuppressions(findings: Finding[], files: ContextFile[]): Fi
     if (!file) return true
     // file-level: look in the first 5 lines
     for (let i = 0; i < Math.min(5, file.lines.length); i++) {
+      if (file.inFence[i]) continue // a fenced doc example is not a directive
       const m = DISABLE_FILE_RE.exec(file.lines[i]!)
       if (m) {
         const ids = idsFrom(m[1])
@@ -31,7 +34,7 @@ export function applySuppressions(findings: Finding[], files: ContextFile[]): Fi
       }
     }
     // line-level: the line directly above the finding
-    if (finding.line >= 2) {
+    if (finding.line >= 2 && !file.inFence[finding.line - 2]) {
       const m = DISABLE_LINE_RE.exec(file.lines[finding.line - 2] ?? '')
       if (m) {
         const ids = idsFrom(m[1])

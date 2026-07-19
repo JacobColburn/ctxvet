@@ -1,0 +1,6 @@
+---
+description: TSX conventions
+globs: *.rsx
+---
+
+Never fires — no .rsx files exist.

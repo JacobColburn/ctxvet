@@ -29,7 +29,19 @@ export const repoOrphanRuleFile: Rule = {
     if (file.kind !== 'cursor-rule' || !file.frontmatter) return []
     const fm = file.frontmatter.data
     if (typeof fm === 'object' && fm !== null && (fm as Record<string, unknown>).alwaysApply === true) return []
-    const globs = globsFromFrontmatter(fm)
+    let globs = globsFromFrontmatter(fm)
+    // Cursor's common unquoted form (`globs: *.tsx`) is a YAML alias parse
+    // error — fall back to reading the raw line so the rule still works.
+    if (file.frontmatter.parseError) {
+      if (/^alwaysApply:\s*true/m.test(file.frontmatter.raw)) return []
+      const m = /^globs:\s*(.+)$/m.exec(file.frontmatter.raw)
+      if (m) {
+        globs = m[1]!
+          .split(',')
+          .map((g) => g.trim().replace(/^["']|["']$/g, ''))
+          .filter(Boolean)
+      }
+    }
     if (!globs || globs.length === 0) return []
     const alive = globs.some((g) => ctx.globMatches(g))
     if (alive) return []

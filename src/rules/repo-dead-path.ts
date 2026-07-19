@@ -25,6 +25,9 @@ export function isPathCandidate(raw: string): string | null {
   if (PLACEHOLDER.test(raw) || PLACEHOLDER.test(token)) return null
   // globs are handled by the caller via globMatches
   if (token.includes('*') || token.includes('?')) {
+    // Reject pathological globs before they reach the matcher (ReDoS guard):
+    // real rule globs have few `**` segments.
+    if ((token.match(/\*\*/g) ?? []).length > 3) return null
     return token.includes('/') || KNOWN_EXTENSIONS.test(token.replace(/\*/g, 'x')) ? token : null
   }
   if (!PATH_SHAPE.test(token)) return null
@@ -35,12 +38,17 @@ export function isPathCandidate(raw: string): string | null {
   return token
 }
 
-/** Collapse `.` and `..` segments in a repo-relative path. */
-export function normalizeSegments(path: string): string {
+/**
+ * Collapse `.` and `..` segments in a repo-relative path. Returns null when the
+ * path escapes above the repo root — such a reference points outside the
+ * scanned tree and must never reach existsSync (path-traversal oracle guard).
+ */
+export function normalizeSegments(path: string): string | null {
   const out: string[] = []
   for (const seg of path.split('/')) {
     if (seg === '' || seg === '.') continue
     if (seg === '..') {
+      if (out.length === 0) return null // escapes the repo root
       out.pop()
       continue
     }
@@ -89,11 +97,17 @@ export const repoDeadPath: Rule = {
       seen.add(key)
 
       // References are legal relative to the file's own directory OR the root.
+      // Both are normalized; a path escaping the repo root becomes null and is
+      // never probed on disk (traversal-oracle guard).
+      const rootRelative = normalizeSegments(token)
       const dirRelative = fileDir ? normalizeSegments(`${fileDir}/${token}`) : null
+      if (rootRelative === null && dirRelative === null) continue
 
       if (token.includes('*') || token.includes('?')) {
         if (isSkill && !fileDir) continue
-        const alive = ctx.globMatches(token) || (dirRelative !== null && ctx.globMatches(dirRelative))
+        const alive =
+          (rootRelative !== null && ctx.globMatches(rootRelative)) ||
+          (dirRelative !== null && ctx.globMatches(dirRelative))
         if (!alive) {
           findings.push({
             ruleId: this.id,
@@ -108,12 +122,13 @@ export const repoDeadPath: Rule = {
       // Extension-less tokens (e.g. `repo/dead-path`, route patterns, rule ids)
       // are only treated as paths when anchored in a real directory.
       if (!KNOWN_EXTENSIONS.test(token)) {
-        const firstSegment = token.split('/')[0]!
+        const firstSegment = (rootRelative ?? '').split('/')[0]!
         const anchored =
           ctx.repoDirs.has(firstSegment) || (fileDir !== '' && ctx.hasPath(`${fileDir}/${firstSegment}`))
         if (!anchored) continue
       }
-      const alive = ctx.hasPath(token) || (dirRelative !== null && ctx.hasPath(dirRelative))
+      const alive =
+        (rootRelative !== null && ctx.hasPath(rootRelative)) || (dirRelative !== null && ctx.hasPath(dirRelative))
       if (!alive) {
         findings.push({
           ruleId: this.id,

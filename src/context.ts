@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { discoverTargets, snapshotRepo } from './discover.js'
 import { globMatchesAny } from './glob.js'
@@ -62,11 +62,21 @@ export function buildContext(root: string, config: ResolvedConfig): LintContext 
   const basenames = new Set<string>()
   for (const f of repoFiles) basenames.add(f.slice(f.lastIndexOf('/') + 1))
 
+  // A context file over this size is pathological (or hostile) — skip reading
+  // it whole into memory. Real context files are kilobytes, not megabytes.
+  const MAX_FILE_BYTES = 5_000_000
+
   const files: ContextFile[] = []
   for (const [path, kind] of targets) {
+    const abs = join(normalizedRoot, path)
+    try {
+      if (statSync(abs).size > MAX_FILE_BYTES) continue
+    } catch {
+      continue
+    }
     let text: string
     try {
-      text = readFileSync(join(normalizedRoot, path), 'utf8')
+      text = readFileSync(abs, 'utf8')
     } catch {
       continue
     }
@@ -86,6 +96,10 @@ export function buildContext(root: string, config: ResolvedConfig): LintContext 
     hasPath(p: string): boolean {
       const clean = p.replace(/^\.\//, '').replace(/\/+$/, '')
       if (repoFiles.has(clean) || repoDirs.has(clean)) return true
+      // Defense in depth: never touch the filesystem outside the repo root.
+      if (clean === '..' || clean.startsWith('../') || clean.includes('/../') || clean.startsWith('/')) {
+        return false
+      }
       // The snapshot excludes ignored globs, but an ignored path still exists —
       // "dead" means gone from disk, not merely unscanned.
       return existsSync(join(normalizedRoot, clean))

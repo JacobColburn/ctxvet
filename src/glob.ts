@@ -10,6 +10,9 @@ export function globToRegExp(pattern: string): RegExp {
   if (p.startsWith('/')) p = p.slice(1)
   // A bare directory-style pattern matches everything beneath it.
   if (p.endsWith('/')) p += '**'
+  // Collapse runs of `**/` into one. Adjacent `(?:.*/)?` groups are both
+  // redundant AND the source of catastrophic backtracking on untrusted input.
+  p = p.replace(/(?:\*\*\/)+/g, '**/').replace(/(?:\*\*){2,}/g, '**')
 
   let re = ''
   let i = 0
@@ -51,7 +54,9 @@ export function globToRegExp(pattern: string): RegExp {
         re += '\\['
         i += 1
       } else {
-        re += p.slice(i, end + 1)
+        let cls = p.slice(i, end + 1)
+        if (cls.startsWith('[!')) cls = `[^${cls.slice(2)}` // glob negation -> regex negation
+        re += cls
         i = end + 1
       }
     } else {

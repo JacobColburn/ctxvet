@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { stripJsonComments } from '../src/config.js'
 import { globToRegExp } from '../src/glob.js'
 import { markFences, extractFrontmatter, parseContextFile } from '../src/parse.js'
-import { isPathCandidate } from '../src/rules/repo-dead-path.js'
+import { isPathCandidate, normalizeSegments } from '../src/rules/repo-dead-path.js'
+import { renderTerminal } from '../src/report/terminal.js'
 
 describe('markFences', () => {
   it('marks fenced lines including delimiters', () => {
@@ -11,6 +12,20 @@ describe('markFences', () => {
   })
   it('handles unclosed fences', () => {
     expect(markFences(['```', 'x'])).toEqual([true, true])
+  })
+  it('a 4-backtick fence is not closed by an inner 3-backtick fence (CommonMark)', () => {
+    const lines = ['````md', '```', 'inner `src/x.ts`', '```', '````', 'after']
+    expect(markFences(lines)).toEqual([true, true, true, true, true, false])
+  })
+  it('a ``` fence is not closed by ~~~', () => {
+    expect(markFences(['```', '~~~', 'x', '```'])).toEqual([true, true, true, true])
+  })
+})
+
+describe('parseContextFile line counting', () => {
+  it('does not count a trailing newline as an extra line', () => {
+    const f = parseContextFile('CLAUDE.md', '/x/CLAUDE.md', 'claude-md', 'a\nb\nc\n')
+    expect(f.lines).toHaveLength(3)
   })
 })
 
@@ -39,6 +54,8 @@ describe('parseContextFile extraction', () => {
 
 describe('globToRegExp', () => {
   const cases: Array<[string, string, boolean]> = [
+    ['src/[!a]*.ts', 'src/b1.ts', true],
+    ['src/[!a]*.ts', 'src/a1.ts', false],
     ['**/*.ts', 'src/deep/a.ts', true],
     ['**/*.ts', 'a.ts', true],
     ['**/*.rs', 'src/a.ts', false],
@@ -77,6 +94,43 @@ describe('isPathCandidate (adversarial)', () => {
   for (const t of rejected) {
     it(`rejects ${t}`, () => expect(isPathCandidate(t)).toBeNull())
   }
+})
+
+describe('security: normalizeSegments traversal guard', () => {
+  it('collapses . and .. within the tree', () => {
+    expect(normalizeSegments('a/./b/../c.ts')).toBe('a/c.ts')
+  })
+  it('returns null when a path escapes the repo root', () => {
+    expect(normalizeSegments('../EXISTS.ts')).toBeNull()
+    expect(normalizeSegments('a/../../etc/passwd')).toBeNull()
+  })
+})
+
+describe('security: glob ReDoS guard', () => {
+  it('rejects a glob token with many ** segments before it reaches the matcher', () => {
+    const evil = Array.from({ length: 40 }, () => '**').join('/') + '/z.ts'
+    expect(isPathCandidate(evil)).toBeNull()
+  })
+})
+
+describe('security: terminal control-char sanitization', () => {
+  it('strips ANSI/OSC escape sequences from finding messages and file names', () => {
+    const ESC = String.fromCharCode(27)
+    const out = renderTerminal(
+      {
+        findings: [
+          { ruleId: 'repo/dead-path', severity: 'warn', file: 'CLAUDE.md', line: 1, message: `glob '${ESC}]0;PWNED${ESC}[2J' matches no files` },
+        ],
+        files: ['CLAUDE.md'],
+        summary: { filesScanned: 1, errors: 0, warnings: 1, infos: 0, estTokens: 10, estDupTokens: 0 },
+      },
+      false,
+    )
+    // Strip legitimate SGR color codes picocolors may add, then assert no
+    // dangerous control chars survive (the report's own \n line breaks are fine).
+    const stripped = out.replace(/\x1b\[[0-9;]*m/g, '')
+    expect(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(stripped)).toBe(false)
+  })
 })
 
 describe('stripJsonComments', () => {

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-import { existsSync, writeFileSync } from 'node:fs'
+import { existsSync, statSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { ConfigError, INIT_TEMPLATE } from './config.js'
 import { lint } from './index.js'
@@ -39,6 +39,11 @@ program
     const root = resolve(path)
     if (!existsSync(root)) {
       console.error(`ctxvet: path not found: ${root}`)
+      process.exitCode = 2
+      return
+    }
+    if (!statSync(root).isDirectory()) {
+      console.error(`ctxvet: not a directory: ${root} (point ctxvet at a repo root, not a file)`)
       process.exitCode = 2
       return
     }

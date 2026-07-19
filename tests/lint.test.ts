@@ -86,6 +86,39 @@ describe('secrets fixture', () => {
   })
 })
 
+describe('traversal fixture (security)', () => {
+  it('skips ..-escaping references and only flags the in-repo dead path', () => {
+    const deadPaths = lint(join(fixtures, 'traversal')).findings.filter((f) => f.ruleId === 'repo/dead-path')
+    expect(deadPaths).toHaveLength(1)
+    expect(deadPaths[0]!.message).toContain('src/gone.ts')
+  })
+})
+
+describe('suppression-forms fixture', () => {
+  it('bare disable-next-line suppresses; fenced examples are not directives', () => {
+    const deadPaths = lint(join(fixtures, 'suppression-forms')).findings.filter((f) => f.ruleId === 'repo/dead-path')
+    expect(deadPaths).toHaveLength(1)
+    expect(deadPaths[0]!.message).toContain('src/gone-b.ts')
+  })
+})
+
+describe('gitignore-semantics fixture', () => {
+  it('honors negation re-includes and slash anchoring like git', () => {
+    const files = lint(join(fixtures, 'gitignore-semantics')).files
+    expect(files).toContain('dist2/keep/CLAUDE.md')
+    expect(files).toContain('sub/docs/temp/CLAUDE.md')
+    expect(files).not.toContain('docs/temp/CLAUDE.md')
+  })
+})
+
+describe('cursor-unquoted fixture', () => {
+  it('checks unquoted globs (YAML parse error) via raw fallback', () => {
+    const orphans = lint(join(fixtures, 'cursor-unquoted')).findings.filter((f) => f.ruleId === 'repo/orphan-rule-file')
+    expect(orphans).toHaveLength(1)
+    expect(orphans[0]!.message).toContain('*.rsx')
+  })
+})
+
 describe('ignored-ref fixture', () => {
   it('does not flag paths that exist on disk but are excluded by ignore globs', () => {
     expect(lint(join(fixtures, 'ignored-ref')).findings.filter((f) => f.ruleId === 'repo/dead-path')).toEqual([])

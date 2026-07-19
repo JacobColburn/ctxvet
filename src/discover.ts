@@ -23,7 +23,14 @@ export const ALWAYS_IGNORE = [
   '**/venv/**',
 ]
 
-/** Best-effort conversion of root .gitignore lines to ignore globs. */
+/**
+ * Best-effort conversion of root .gitignore lines to ignore globs.
+ * Git semantics honored: patterns containing a slash are anchored to the root;
+ * slash-less patterns match at any depth. Negations (`!pattern`) cannot be
+ * expressed as fast-glob ignores, so any positive pattern a negation re-includes
+ * under is dropped entirely — for a linter, scanning too much beats silently
+ * missing files.
+ */
 export function gitignoreGlobs(root: string): string[] {
   let text: string
   try {
@@ -31,14 +38,22 @@ export function gitignoreGlobs(root: string): string[] {
   } catch {
     return []
   }
-  const globs: string[] = []
+  const strip = (s: string) => s.replace(/^\//, '').replace(/\/$/, '')
+  const positives: string[] = []
+  const negations: string[] = []
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim()
-    if (!line || line.startsWith('#') || line.startsWith('!')) continue
-    let g = line
-    if (g.endsWith('/')) g = g.slice(0, -1)
-    if (g.startsWith('/')) {
-      globs.push(`${g.slice(1)}`, `${g.slice(1)}/**`)
+    if (!line || line.startsWith('#')) continue
+    if (line.startsWith('!')) negations.push(strip(line.slice(1)))
+    else positives.push(line)
+  }
+  const globs: string[] = []
+  for (const line of positives) {
+    const g = strip(line)
+    if (negations.some((n) => n === g || n.startsWith(`${g}/`))) continue
+    if (line.includes('/') && line.indexOf('/') < line.length - 1) {
+      // anchored (leading or middle slash)
+      globs.push(g, `${g}/**`)
     } else {
       globs.push(`**/${g}`, `**/${g}/**`)
     }

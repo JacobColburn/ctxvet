@@ -1,25 +1,26 @@
 import { parse as parseYaml } from 'yaml'
 import type { CodeSpan, ContextFile, FileKind, Frontmatter, LinkRef } from './types.js'
 
-const FENCE_RE = /^\s{0,3}(```|~~~)/
+const FENCE_RE = /^\s{0,3}(`{3,}|~{3,})/
 const CODE_SPAN_RE = /`([^`\n]+)`/g
 const LINK_RE = /\[[^\]]*\]\(([^)\s]+)(?:\s[^)]*)?\)/g
 
 /** Split text into lines and mark which lines are inside (or delimit) fenced code blocks. */
 export function markFences(lines: string[]): boolean[] {
   const inFence: boolean[] = new Array(lines.length).fill(false)
-  let open: string | null = null
+  let open: { char: string; len: number } | null = null
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]!
     const m = FENCE_RE.exec(line)
     if (m) {
       const marker = m[1]!
       if (open === null) {
-        open = marker
+        open = { char: marker[0]!, len: marker.length }
         inFence[i] = true
         continue
       }
-      if (marker === open) {
+      // CommonMark: a fence closes only on the same char at >= opening length
+      if (marker[0] === open.char && marker.length >= open.len) {
         inFence[i] = true
         open = null
         continue
@@ -79,6 +80,8 @@ export function extractLinks(lines: string[], inFence: boolean[], bodyStartLine:
 
 export function parseContextFile(path: string, absPath: string, kind: FileKind, text: string): ContextFile {
   const lines = text.split(/\r\n|\r|\n/)
+  // A trailing newline is a line terminator, not an extra (empty) line.
+  if (lines.length > 1 && lines[lines.length - 1] === '') lines.pop()
   const inFence = markFences(lines)
   const frontmatter = extractFrontmatter(lines)
   const bodyStartLine = frontmatter ? frontmatter.endLine + 1 : 1

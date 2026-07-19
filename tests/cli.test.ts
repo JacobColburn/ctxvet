@@ -34,6 +34,10 @@ describe('cli (built)', () => {
   it('exits 2 on a missing path', () => {
     expect(run([join(fixtures, 'does-not-exist')]).code).toBe(2)
   })
+  it('exits 2 with a clean message when given a file instead of a directory', () => {
+    const { code } = run([join(fixtures, 'clean', 'CLAUDE.md')])
+    expect(code).toBe(2)
+  })
   it('emits stable json', () => {
     const { stdout } = run([join(fixtures, 'dead-refs'), '--format', 'json'])
     const parsed = JSON.parse(stdout) as { schemaVersion: number; findings: unknown[] }
