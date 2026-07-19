@@ -1,11 +1,21 @@
 import { execFileSync } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const cli = join(root, 'dist', 'cli.js')
 const fixtures = join(root, 'tests', 'fixtures')
+
+// These tests exercise the built binary. Ensure it exists so the suite passes
+// regardless of step order (fresh CI checkout, contributor clone, `npm test`
+// before `npm run build`). dist/ is gitignored, so it won't be present yet.
+beforeAll(() => {
+  if (!existsSync(cli)) {
+    execFileSync('npm', ['run', 'build'], { cwd: root, stdio: 'inherit', shell: process.platform === 'win32' })
+  }
+}, 120_000)
 
 function run(args: string[]): { stdout: string; code: number } {
   try {

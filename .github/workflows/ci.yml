@@ -19,7 +19,8 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm ci
       - run: npm run typecheck
-      - run: npm test
+      # Build first: the CLI tests and the dogfood step both run the built binary.
       - run: npm run build
+      - run: npm test
       # Dogfood gate: this repo must pass its own linter.
       - run: node dist/cli.js .

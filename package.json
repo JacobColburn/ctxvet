@@ -49,7 +49,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint:self": "node dist/cli.js .",
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+    "prepublishOnly": "npm run typecheck && npm run build && npm run test"
   },
   "dependencies": {
     "commander": "15.0.0",
