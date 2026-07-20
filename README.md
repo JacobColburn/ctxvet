@@ -81,6 +81,18 @@ Fair question. AGENTS.md is a real standard (Linux Foundation AAIF, 20+ tools re
 
 `node dist/cli.js .` runs in CI on every push ([workflow](.github/workflows/ci.yml)). The [lint-context skill](.claude/skills/lint-context/SKILL.md) shipped here is both dogfood and a demo.
 
+## FAQ
+
+**Why is my agent ignoring my CLAUDE.md?** Often because it's rotted — it points at files or scripts that no longer exist, or it's so long the important lines get lost. `ctxvet` catches the first class directly and flags the second with size/token warnings.
+
+**My CLAUDE.md is too long — how do I trim it?** Run `ctxvet` and start with the `size/bloat` and `style/vague-instruction` findings: delete no-op lines ("follow best practices") and dedupe anything the `dup/cross-file` rule flags as living in two files at once.
+
+**How is this different from cclint / ctxlint / AgentLint?** ctxvet's checks are **repo-grounded** — it validates every path, script, and glob against your actual file tree, package.json, and Makefile, not the markdown in isolation. It also lints **SKILL.md** quality (triggering, frontmatter), which most context linters don't touch. No LLM calls, no network.
+
+**Does it validate SKILL.md?** Yes — `skill/frontmatter` checks spec conformance (name/description/directory match) and `skill/description-quality` flags descriptions too thin or missing a "when to use" signal, which is why skills silently never trigger.
+
+**Can I run it in CI?** Yes. `ctxvet` exits non-zero on errors (and on warnings over `--max-warnings N`), and `--format json` gives a stable schema. See the [workflow](.github/workflows/ci.yml) in this repo.
+
 ## Roadmap
 
 - GitHub Action wrapper (the JSON format + exit codes already make this trivial)

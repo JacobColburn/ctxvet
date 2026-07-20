@@ -1,7 +1,7 @@
 {
   "name": "ctxvet",
   "version": "0.1.0",
-  "description": "Evidence-grounded linter for AI agent context files — CLAUDE.md, AGENTS.md, .cursor/rules, SKILL.md — checked against your actual repo.",
+  "description": "Lint AI agent context files — CLAUDE.md, AGENTS.md, .cursor/rules, SKILL.md — against your actual repo: stale refs, dead commands, bloat, drift. npx ctxvet.",
   "type": "module",
   "license": "MIT",
   "author": "Hunter Colburn",
@@ -14,15 +14,26 @@
     "url": "https://github.com/JacobColburn/ctxvet/issues"
   },
   "keywords": [
-    "claude",
-    "claude-code",
+    "claude-md",
+    "claude.md",
     "agents-md",
+    "agents.md",
+    "claude-code",
     "cursor-rules",
     "skill-md",
-    "lint",
-    "linter",
+    "agent-skills",
+    "context-file",
+    "context-linter",
+    "agent-context",
     "ai-agents",
-    "context-engineering"
+    "linter",
+    "lint",
+    "cli",
+    "context-engineering",
+    "token-optimization",
+    "developer-tools",
+    "static-analysis",
+    "ctxvet"
   ],
   "engines": {
     "node": ">=20"
