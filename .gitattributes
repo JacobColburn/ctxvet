@@ -1,1 +1,10 @@
 * text=auto eol=lf
+
+# Binary assets — never normalize line endings (would corrupt them).
+*.png binary
+*.gif binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.woff binary
+*.woff2 binary

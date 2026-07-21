@@ -1,6 +1,6 @@
 {
   "name": "ctxvet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lint AI agent context files — CLAUDE.md, AGENTS.md, .cursor/rules, SKILL.md — against your actual repo: stale refs, dead commands, bloat, drift. npx ctxvet.",
   "type": "module",
   "license": "MIT",

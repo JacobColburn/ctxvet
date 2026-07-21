@@ -1,19 +1,31 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-import { existsSync, statSync, writeFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { ConfigError, INIT_TEMPLATE } from './config.js'
 import { lint } from './index.js'
 import { renderJson } from './report/json.js'
 import { renderTerminal } from './report/terminal.js'
 import { ALL_RULES } from './rules/index.js'
 
+// Read the version from the package's own package.json (next to dist/) so
+// `--version` never drifts from the published version.
+function readVersion(): string {
+  try {
+    const pkgPath = join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json')
+    return (JSON.parse(readFileSync(pkgPath, 'utf8')) as { version?: string }).version ?? '0.0.0'
+  } catch {
+    return '0.0.0'
+  }
+}
+
 const program = new Command()
 
 program
   .name('ctxvet')
-  .description('Evidence-grounded linter for AI agent context files (CLAUDE.md, AGENTS.md, .cursor/rules, SKILL.md)')
-  .version('0.1.0')
+  .description('Lint AI agent context files (CLAUDE.md, AGENTS.md, .cursor/rules, SKILL.md) against your actual repo')
+  .version(readVersion())
 
 program
   .argument('[path]', 'repo root to lint', '.')

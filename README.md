@@ -10,7 +10,7 @@ Code gets linters. The files that steer your agents get nothing. `ctxvet` fixes 
 npx ctxvet
 ```
 
-![ctxvet running against a repo, flagging a dead path, a dead script, a vague instruction, and a cross-file duplicate](https://raw.githubusercontent.com/JacobColburn/ctxvet/main/assets/hero-terminal.png)
+![ctxvet running against a repo, flagging a dead path, a dead script, a vague instruction, and a cross-file duplicate](https://raw.githubusercontent.com/JacobColburn/ctxvet/main/assets/demo.gif)
 
 Zero config, no LLM calls, no network, no telemetry. Four runtime dependencies.
 
